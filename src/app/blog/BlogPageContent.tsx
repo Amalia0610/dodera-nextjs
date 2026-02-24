@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { ArrowRight, Calendar, Clock } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -69,57 +70,71 @@ export function BlogPageContent({ posts }: BlogPageContentProps) {
                                     whileInView="visible"
                                     viewport={viewportOnce}
                                     transition={stagger(i % 3)}
-                                    className="group flex flex-col rounded-xl border border-white/[0.06] bg-white/[0.02] p-6 backdrop-blur-sm transition-colors hover:bg-white/[0.04]"
+                                    className="group flex flex-col overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.02] backdrop-blur-sm transition-colors hover:bg-white/[0.04]"
                                 >
-                                    <div className="mb-4 flex items-center gap-3">
-                                        <Badge
-                                            variant="outline"
-                                            className="border-primary/30 bg-primary/5 text-[11px] text-primary"
-                                        >
-                                            {post.category}
-                                        </Badge>
-                                        <span className="flex items-center gap-1 text-[11px] text-muted-foreground">
-                                            <Clock className="size-3" />
-                                            {post.readTime}
-                                        </span>
-                                    </div>
+                                    {post.image && (
+                                        <div className="relative aspect-[16/9] w-full overflow-hidden">
+                                            <Image
+                                                src={post.image}
+                                                alt={post.title}
+                                                fill
+                                                className="object-cover transition-transform duration-300 group-hover:scale-105"
+                                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                            />
+                                        </div>
+                                    )}
 
-                                    <h2 className="mb-3 text-lg font-bold leading-tight transition-colors group-hover:text-primary">
-                                        {post.title}
-                                    </h2>
-
-                                    <p className="mb-4 flex-1 text-sm leading-relaxed text-muted-foreground">
-                                        {post.excerpt}
-                                    </p>
-
-                                    <div className="mb-4 flex flex-wrap gap-1.5">
-                                        {post.tags.map((tag) => (
+                                    <div className="flex flex-1 flex-col p-6">
+                                        <div className="mb-4 flex items-center gap-3">
                                             <Badge
-                                                key={tag}
                                                 variant="outline"
-                                                className="border-white/[0.08] bg-white/[0.03] text-[10px] text-muted-foreground"
+                                                className="border-primary/30 bg-primary/5 text-[11px] text-primary"
                                             >
-                                                {tag}
+                                                {post.category}
                                             </Badge>
-                                        ))}
-                                    </div>
+                                            <span className="flex items-center gap-1 text-[11px] text-muted-foreground">
+                                                <Clock className="size-3" />
+                                                {post.readTime}
+                                            </span>
+                                        </div>
 
-                                    <div className="flex items-center justify-between border-t border-white/[0.06] pt-4">
-                                        <time
-                                            dateTime={post.date}
-                                            className="flex items-center gap-1.5 text-xs text-muted-foreground"
-                                        >
-                                            <Calendar className="size-3" />
-                                            {new Date(post.date).toLocaleDateString("en-US", {
-                                                year: "numeric",
-                                                month: "short",
-                                                day: "numeric",
-                                            })}
-                                        </time>
-                                        <span className="inline-flex items-center gap-1 text-xs font-medium text-primary transition-colors">
-                                            Read More
-                                            <ArrowRight className="size-3 transition-transform group-hover:translate-x-1" />
-                                        </span>
+                                        <h2 className="mb-3 text-lg font-bold leading-tight transition-colors group-hover:text-primary">
+                                            {post.title}
+                                        </h2>
+
+                                        <p className="mb-4 flex-1 text-sm leading-relaxed text-muted-foreground">
+                                            {post.excerpt}
+                                        </p>
+
+                                        <div className="mb-4 flex flex-wrap gap-1.5">
+                                            {post.tags.map((tag) => (
+                                                <Badge
+                                                    key={tag}
+                                                    variant="outline"
+                                                    className="border-white/[0.08] bg-white/[0.03] text-[10px] text-muted-foreground"
+                                                >
+                                                    {tag}
+                                                </Badge>
+                                            ))}
+                                        </div>
+
+                                        <div className="flex items-center justify-between border-t border-white/[0.06] pt-4">
+                                            <time
+                                                dateTime={post.date}
+                                                className="flex items-center gap-1.5 text-xs text-muted-foreground"
+                                            >
+                                                <Calendar className="size-3" />
+                                                {new Date(post.date).toLocaleDateString("en-US", {
+                                                    year: "numeric",
+                                                    month: "short",
+                                                    day: "numeric",
+                                                })}
+                                            </time>
+                                            <span className="inline-flex items-center gap-1 text-xs font-medium text-primary transition-colors">
+                                                Read More
+                                                <ArrowRight className="size-3 transition-transform group-hover:translate-x-1" />
+                                            </span>
+                                        </div>
                                     </div>
                                 </motion.article>
                             </Link>

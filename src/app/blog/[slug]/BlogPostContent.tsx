@@ -1,7 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowLeft, Calendar, Clock, Tag } from "lucide-react";
+import { ArrowLeft, Calendar, Clock, Tag, User } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -105,8 +106,63 @@ export function BlogPostContent({ post }: BlogPostContentProps) {
                             ))}
                         </motion.div>
                     )}
+
+                    {/* Author */}
+                    {post.author && (
+                        <motion.div
+                            variants={fadeInUp}
+                            initial="hidden"
+                            animate="visible"
+                            transition={{ duration: 0.4, delay: 0.28 }}
+                            className="mt-8 flex items-center gap-3"
+                        >
+                            {post.author.avatar ? (
+                                <Image
+                                    src={post.author.avatar}
+                                    alt={post.author.name}
+                                    width={40}
+                                    height={40}
+                                    className="rounded-full"
+                                />
+                            ) : (
+                                <div className="flex size-10 items-center justify-center rounded-full bg-white/[0.06]">
+                                    <User className="size-5 text-muted-foreground" />
+                                </div>
+                            )}
+                            <div>
+                                <p className="text-sm font-medium">{post.author.name}</p>
+                                {post.author.bio && (
+                                    <p className="text-xs text-muted-foreground">{post.author.bio}</p>
+                                )}
+                            </div>
+                        </motion.div>
+                    )}
                 </div>
             </section>
+
+            {/* ── Featured Image ───────────────────────────── */}
+            {post.image && (
+                <section aria-label="Featured image" className="relative">
+                    <div className="mx-auto max-w-4xl px-6">
+                        <motion.div
+                            variants={fadeInUpLg}
+                            initial="hidden"
+                            animate="visible"
+                            transition={{ duration: 0.5, delay: 0.3 }}
+                            className="relative aspect-[16/9] overflow-hidden rounded-xl border border-white/[0.06]"
+                        >
+                            <Image
+                                src={post.image}
+                                alt={post.title}
+                                fill
+                                priority
+                                className="object-cover"
+                                sizes="(max-width: 768px) 100vw, 896px"
+                            />
+                        </motion.div>
+                    </div>
+                </section>
+            )}
 
             {/* ── Body ────────────────────────────────────── */}
             <section aria-label="Article body" className="relative py-16">
