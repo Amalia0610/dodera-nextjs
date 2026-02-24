@@ -76,11 +76,13 @@ const HONEYPOT_FIELD = "website_url";
 /* ── Component ────────────────────────────────────────────── */
 export function ContactForm() {
     const [submitted, setSubmitted] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
+    const [serverError, setServerError] = useState<string | null>(null);
     const [errors, setErrors] = useState<FieldErrors>({});
     const [submitCount, setSubmitCount] = useState(0);
     const [lastSubmitTime, setLastSubmitTime] = useState(0);
 
-    function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
 
         const now = Date.now();
@@ -109,11 +111,35 @@ export function ContactForm() {
         }
 
         setErrors({});
+        setServerError(null);
+        setSubmitting(true);
         setSubmitCount((c) => c + 1);
         setLastSubmitTime(now);
 
-        // TODO: wire up to backend / email API - send `safe` payload
-        setSubmitted(true);
+        try {
+            const res = await fetch("/api/contact", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(safe),
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                if (data.errors) {
+                    setErrors(data.errors);
+                } else {
+                    setServerError(data.message ?? "Something went wrong. Please try again.");
+                }
+                return;
+            }
+
+            setSubmitted(true);
+        } catch {
+            setServerError("Network error. Please check your connection and try again.");
+        } finally {
+            setSubmitting(false);
+        }
     }
 
     if (submitted) {
@@ -226,6 +252,13 @@ export function ContactForm() {
                 </div>
             </div>
 
+            {serverError && (
+                <div className="flex items-center gap-2 rounded-lg border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-400">
+                    <AlertCircle className="size-4 shrink-0" />
+                    {serverError}
+                </div>
+            )}
+
             <div className="space-y-2">
                 <label htmlFor="contact-message" className="flex items-center gap-2 text-sm font-medium">
                     <MessageSquare className="size-3.5 text-muted-foreground" />
@@ -245,9 +278,9 @@ export function ContactForm() {
                 {fieldErr(errors.message)}
             </div>
 
-            <Button type="submit" size="lg" className="w-full">
-                Send Message
-                <Send className="ml-2 size-4" />
+            <Button type="submit" size="lg" className="w-full" disabled={submitting}>
+                {submitting ? "Sending…" : "Send Message"}
+                {!submitting && <Send className="ml-2 size-4" />}
             </Button>
         </form>
     );
