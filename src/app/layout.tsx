@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "sonner";
+import { PrismicPreviewBar } from "@/components/PrismicPreviewBar";
 import { SITE, DEFAULT_META } from "@/config/seo";
 import "./globals.css";
 
@@ -91,6 +92,7 @@ export default function RootLayout({
             }}
           />
         </TooltipProvider>
+        <PrismicPreviewBar />
       </body>
     </html>
   );

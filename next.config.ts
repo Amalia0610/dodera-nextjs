@@ -38,6 +38,16 @@ const nextConfig: NextConfig = {
   /* ── Image optimisation ──────────────────────────────── */
   images: {
     formats: ["image/avif", "image/webp"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "images.prismic.io",
+      },
+      {
+        protocol: "https",
+        hostname: "*.cdn.prismic.io",
+      },
+    ],
   },
 
   /* ── Powered-by header removal ───────────────────────── */
