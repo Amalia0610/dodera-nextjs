@@ -48,7 +48,13 @@ function mapPrismicPost(doc: BlogPostDocument): BlogPost {
             }
             : undefined,
         image: d.featured_image?.url ?? undefined,
-        body: prismic.asHTML(d.body) ?? undefined,
+        body: (() => {
+            const html = prismic.asHTML(d.body);
+            if (!html) return undefined;
+            // Remove stray "undefined" fragments produced by empty embed blocks
+            const cleaned = html.replace(/(?:<[^>]*>)?\s*undefined\s*(?:<\/[^>]*>)?/g, "").trim();
+            return cleaned || undefined;
+        })(),
         seo: {
             metaTitle: d.meta_title ?? undefined,
             metaDescription: d.meta_description ?? undefined,
