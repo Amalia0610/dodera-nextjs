@@ -7,7 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "slicemachine": "start-slicemachine"
+    "slicemachine": "start-slicemachine",
+    "token:generate": "npx tsx --env-file=.env scripts/generate-api-token.ts",
+    "token:revoke": "npx tsx --env-file=.env scripts/revoke-api-token.ts",
+    "token:list": "npx tsx --env-file=.env scripts/list-api-tokens.ts"
   },
   "dependencies": {
     "@prismicio/client": "^7.21.6",
@@ -44,6 +47,7 @@
     "postcss": "^8.5.6",
     "slice-machine-ui": "^2.21.1",
     "tailwindcss": "^3.4.19",
+    "tsx": "^4.21.0",
     "typescript": "^5"
   }
 }
