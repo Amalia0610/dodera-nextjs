@@ -196,29 +196,51 @@ export async function POST(request: NextRequest) {
 
         const migration = prismic.createMigration();
 
-        /* Handle image assets */
+        /**
+         * Fetch an external image URL and return a File object so Prismic
+         * never needs to call back to a foreign URL (many CDN links, including
+         * OpenAI-generated ones, are short-lived or blocked by Prismic).
+         * Results are cached within this request to avoid fetching the same
+         * URL twice (e.g. featured_image_url === og_image_url).
+         */
+        const fileCache = new Map<string, File>();
+        async function fetchAsFile(url: string, filename: string): Promise<File> {
+            if (fileCache.has(url)) return fileCache.get(url)!;
+            const res = await fetch(url);
+            if (!res.ok) throw new Error(`Failed to fetch asset from ${url}: ${res.statusText}`);
+            const buffer = await res.arrayBuffer();
+            const contentType = res.headers.get("content-type") ?? "image/png";
+            const ext = contentType.split("/")[1]?.split(";")[0] ?? "png";
+            const safeFilename = filename.endsWith(`.${ext}`) ? filename : `${filename}.${ext}`;
+            const file = new File([buffer], safeFilename, { type: contentType });
+            fileCache.set(url, file);
+            return file;
+        }
+
+        /* Handle image assets — download externally hosted images first so
+           Prismic receives binary data rather than a foreign URL. */
         let featuredImage;
         if (payload.featured_image_url) {
+            const file = await fetchAsFile(payload.featured_image_url, payload.title);
             featuredImage = migration.createAsset(
-                payload.featured_image_url,
-                payload.title, // asset filename label
+                file,
+                file.name,
                 { alt: payload.featured_image_alt || payload.title },
             );
         }
 
         let authorAvatar;
         if (payload.author_avatar_url) {
-            authorAvatar = migration.createAsset(
-                payload.author_avatar_url,
-                `${payload.author_name || "author"}-avatar`,
-            );
+            const file = await fetchAsFile(payload.author_avatar_url, `${payload.author_name || "author"}-avatar`);
+            authorAvatar = migration.createAsset(file, file.name);
         }
 
         let ogImage;
         if (payload.og_image_url) {
+            const file = await fetchAsFile(payload.og_image_url, `${payload.uid}-og`);
             ogImage = migration.createAsset(
-                payload.og_image_url,
-                `${payload.uid}-og`,
+                file,
+                file.name,
                 { alt: payload.meta_title || payload.title },
             );
         }

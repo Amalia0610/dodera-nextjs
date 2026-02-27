@@ -5,7 +5,7 @@ import { authenticateRequest } from "@/lib/api-auth";
 
 /* ── Model ──────────────────────────────────────────────────── */
 
-const OPENAI_MODEL = process.env.OPENAI_BLOG_MODEL ?? "gpt-4o";
+const OPENAI_MODEL = process.env.OPENAI_BLOG_MODEL ?? "gpt-5.2";
 
 /* ── Output shape ───────────────────────────────────────────── */
 
@@ -26,23 +26,42 @@ interface GeneratedPost {
 // Injected at runtime so content is always year-accurate
 const CURRENT_YEAR = new Date().getFullYear();
 
-const SYSTEM_PROMPT = `You are an expert SEO content writer and IT industry analyst working for Dodera — a web and AI automation agency that builds custom AI agents, workflow automations (n8n, Make, Zapier), and modern websites for businesses.
+const SYSTEM_PROMPT = `You are an expert SEO content writer and technology industry analyst working for Dodera — a software development and AI automation agency that builds custom AI agents, workflow automations (n8n, Make, Zapier), modern web applications, SaaS products, MVPs, and enterprise platforms.
 
-The current year is ${CURRENT_YEAR}. All content, examples, trends, and data references must reflect ${CURRENT_YEAR}. Never mention 2024 or any past year as "current" or "this year".
+The current year is ${CURRENT_YEAR}. All content, examples, trends, and data references must reflect ${CURRENT_YEAR}. Never mention past years as "current" or "this year".
 
-Your job is to:
-1. Identify the single most relevant and trending topic RIGHT NOW (${CURRENT_YEAR}) in the IT / AI / automation / web development industry that would interest Dodera's target audience (business owners, ops managers, CTOs, and tech-forward SMEs).
-2. Write a complete, publication-ready, SEO-optimised blog post about that topic.
-3. Naturally and subtly weave in Dodera's services (AI automation, AI agents, workflow automation, modern web development) as relevant solutions — never forced, always helpful.
+TOPIC SELECTION (critical — follow exactly):
+Your job is to pick ONE highly relevant, trending topic that is making waves RIGHT NOW in the broader technology / software / business landscape. You MUST vary the subject area. Choose from ANY of the following domains — do NOT default to AI every time:
+
+- Artificial Intelligence & Machine Learning (LLMs, computer vision, generative AI, AI safety, edge AI)
+- Workflow & Business Automation (n8n, Make, Zapier, RPA, process mining)
+- Web Development & Frontend (React, Next.js, performance, accessibility, web standards, PWAs)
+- Cloud & Infrastructure (AWS, Azure, GCP, serverless, Kubernetes, edge computing, FinOps)
+- Cybersecurity & Privacy (zero trust, supply-chain attacks, data regulations, identity management)
+- DevOps & Platform Engineering (CI/CD, observability, IaC, developer experience, internal platforms)
+- Data Engineering & Analytics (real-time pipelines, lakehouse, data mesh, BI modernisation)
+- Mobile & Cross-Platform (React Native, Flutter, native vs hybrid, super-apps)
+- SaaS & Product Strategy (PLG, pricing models, churn reduction, vertical SaaS, micro-SaaS)
+- Startup & MVP Development (lean validation, no-code/low-code, rapid prototyping, go-to-market)
+- Enterprise Software (ERP modernisation, legacy migration, composable architecture, API-first)
+- Emerging Tech (quantum computing, AR/VR/spatial computing, blockchain utility, IoT, robotics)
+- Tech Leadership & Culture (remote engineering teams, hiring, tech debt management, agile at scale)
+
+Pick whichever domain has the freshest, most discussion-worthy angle right now. Over a series of calls you should cover many different domains — do not repeat the same domain or angle as a recently published post would.
+
+YOUR TASK:
+1. Select the single hottest, most share-worthy topic from any domain above.
+2. Write a complete, publication-ready, SEO-optimised blog post about it.
+3. Where genuinely relevant, subtly reference how Dodera's services (AI agents, automation, web/app development, SaaS, MVP builds, enterprise platforms) relate — but ONLY when natural. Some posts may barely mention Dodera's services and that is fine.
 
 OUTPUT FORMAT — respond with ONLY a valid JSON object, no markdown fencing, no extra text:
 {
-  "uid": "<url-slug: lowercase letters, numbers, hyphens only, e.g. 'ai-agents-transforming-business-${CURRENT_YEAR}'>",
+  "uid": "<url-slug: lowercase letters, numbers, hyphens only, e.g. 'kubernetes-cost-optimization-${CURRENT_YEAR}'>",
   "title": "<see TITLE RULES below>",
   "excerpt": "<2-3 sentence summary, max 300 chars>",
   "body": "<full article body — see BODY RULES below>",
   "tags": ["<tag1>", "<tag2>", "<tag3>", "<tag4>"],
-  "category": "<one of: AI Automation | Web Development | AI Agents | Business Tech | Industry Trends>",
+  "category": "<one of: AI Automation | Web Development | AI Agents | Business Tech | Industry Trends | Cybersecurity | Cloud & DevOps | Data & Analytics | SaaS & Product | Startup & MVP>",
   "read_time": "<e.g. '6 min read'>",
   "meta_title": "<SEO meta title, max 60 chars>",
   "meta_description": "<SEO meta description, 140-160 chars, includes primary keyword>"
@@ -51,10 +70,10 @@ OUTPUT FORMAT — respond with ONLY a valid JSON object, no markdown fencing, no
 TITLE RULES (critical — follow exactly):
 - Must be immediately engaging and click-worthy.
 - Use one of these proven high-CTR formats:
-  * Listicle: "7 AI Automation Tools That Will Transform Your Business in ${CURRENT_YEAR}"
+  * Listicle: "7 Cloud Cost Mistakes Burning Through Your Budget in ${CURRENT_YEAR}"
   * How-to: "How to Cut Operational Costs by 40% With AI Workflow Automation"
-  * Problem/Solution: "Why Your Business Is Falling Behind Without AI Agents (And How to Fix It)"
-  * Curiosity gap: "The Automation Strategy Most CEOs Are Ignoring in ${CURRENT_YEAR}"
+  * Problem/Solution: "Why Your Legacy ERP is Costing You Millions (And How to Fix It)"
+  * Curiosity gap: "The DevOps Practice Most Engineering Teams Still Get Wrong"
 - Only include "${CURRENT_YEAR}" in the title if it genuinely adds value (listicles, trend pieces). Omit it for timeless how-to or problem/solution titles.
 - Max 70 characters.
 - Primary keyword must appear in the first half of the title.
@@ -64,7 +83,7 @@ BODY RULES:
 - Plain text paragraphs separated by a blank line (\\n\\n).
 - Use "## Heading" for H2 section titles, "### Subheading" for H3.
 - Target 900-1400 words.
-- Structure: Hook introduction (mention ${CURRENT_YEAR} context) -> 4-6 main sections -> Conclusion with subtle CTA toward consulting an automation partner.
+- Structure: Hook introduction (mention ${CURRENT_YEAR} context) -> 4-6 main sections -> Conclusion with subtle CTA toward consulting a technology partner.
 - All statistics, trends, and tool references must be relevant to ${CURRENT_YEAR}.
 - Do NOT use markdown bold (**), italic (*), or bullet lists inside the body string.
 
@@ -91,6 +110,34 @@ SEO RULES:
 - Primary keyword in title, first paragraph, at least two H2 headings, and meta fields.
 - Engaging introduction within the first 100 words — open with a striking stat or question.
 - Naturally include LSI/secondary keywords throughout.`;
+
+/* ── Topic diversity helper ─────────────────────────────────── */
+
+/**
+ * Returns a random topic-domain hint so the AI doesn't always gravitate
+ * toward the same subject area across successive calls.
+ */
+const TOPIC_DOMAINS = [
+    "AI & Machine Learning",
+    "Workflow & Business Automation",
+    "Web Development & Frontend",
+    "Cloud & Infrastructure",
+    "Cybersecurity & Privacy",
+    "DevOps & Platform Engineering",
+    "Data Engineering & Analytics",
+    "Mobile & Cross-Platform",
+    "SaaS & Product Strategy",
+    "Startup & MVP Development",
+    "Enterprise Software",
+    "Emerging Tech (quantum, AR/VR, IoT)",
+    "Tech Leadership & Culture",
+];
+
+function getRandomTopicHint(): string {
+    const shuffled = TOPIC_DOMAINS.sort(() => Math.random() - 0.5);
+    const picked = shuffled.slice(0, 3);
+    return `Consider these domains first (but pick whichever is genuinely trending the most): ${picked.join(", ")}. Do NOT always default to AI — variety is critical.`;
+}
 
 /* ── Parse + validate OpenAI response ──────────────────────── */
 
@@ -168,12 +215,12 @@ export async function GET(request: NextRequest) {
         const completion = await openai.chat.completions.create({
             model: OPENAI_MODEL,
             response_format: { type: "json_object" },
-            temperature: 0.75,
+            temperature: 0.9,
             messages: [
                 { role: "system", content: SYSTEM_PROMPT },
                 {
                     role: "user",
-                    content: "Pick the most relevant trending topic in IT / AI / automation right now and write the full blog post. Output only the JSON object.",
+                    content: `${getRandomTopicHint()}\n\nPick the single most trending, share-worthy topic in the technology space right now and write the full blog post. Output only the JSON object.`,
                 },
             ],
         });
@@ -199,23 +246,58 @@ export async function GET(request: NextRequest) {
         );
     }
 
-    /* ── 5. Return early if save_to_prismic=false ────────────── */
+    /* ── 5. Generate featured image ──────────────────────────── */
+    const origin = `${request.nextUrl.protocol}//${request.nextUrl.host}`;
+    const authHeader = request.headers.get("authorization") ?? "";
+
+    let featuredImageUrl: string | undefined;
+
+    try {
+        const generateImageUrl = `${origin}/api/generate-image?return_url=true`;
+
+        console.log(`[auto-post] Requesting featured image via ${generateImageUrl}`);
+
+        const imageRes = await fetch(generateImageUrl, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: authHeader,
+            },
+            body: JSON.stringify({
+                title: generatedPost.title,
+                excerpt: generatedPost.excerpt,
+                category: generatedPost.category,
+                tags: generatedPost.tags,
+            }),
+        });
+
+        if (imageRes.ok) {
+            const imageJson = await imageRes.json() as { status: string; url?: string };
+            featuredImageUrl = imageJson.url;
+            console.log(`[auto-post] Featured image URL obtained: ${featuredImageUrl?.slice(0, 80)}…`);
+        } else {
+            console.warn(`[auto-post] Image generation returned ${imageRes.status} — continuing without image.`);
+        }
+    } catch (imgErr) {
+        console.warn("[auto-post] Image generation failed — continuing without image:", imgErr);
+    }
+
+    /* ── 6. Return early if save_to_prismic=false ────────────── */
     if (!saveToPrismic) {
         return NextResponse.json(
             {
                 status: "success",
                 message: "Blog post generated (not saved to Prismic).",
                 generated_post: generatedPost,
+                ...(featuredImageUrl && { featured_image_url: featuredImageUrl }),
             },
             { status: 200 },
         );
     }
 
-    /* ── 6. POST to /api/blog ────────────────────────────────── */
+    /* ── 7. POST to /api/blog ────────────────────────────────── */
     try {
-        const origin = `${request.nextUrl.protocol}//${request.nextUrl.host}`;
         const blogApiUrl = `${origin}/api/blog`;
-        const authHeader = request.headers.get("authorization") ?? "";
 
         const blogPayload = {
             uid: generatedPost.uid,
@@ -231,6 +313,11 @@ export async function GET(request: NextRequest) {
             author_name: authorName,
             lang,
             publish,
+            ...(featuredImageUrl && {
+                featured_image_url: featuredImageUrl,
+                featured_image_alt: generatedPost.title,
+                og_image_url: featuredImageUrl,
+            }),
         };
 
         console.log(`[auto-post] Forwarding to Prismic via ${blogApiUrl}`);
