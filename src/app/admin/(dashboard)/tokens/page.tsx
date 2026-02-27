@@ -16,6 +16,8 @@ import {
     AlertTriangle,
     Pencil,
     MoreHorizontal,
+    ChevronLeft,
+    ChevronRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -38,8 +40,21 @@ interface Token {
     last_used_at: string | null;
 }
 
+interface Pagination {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+}
+
 export default function TokensPage() {
     const [tokens, setTokens] = useState<Token[]>([]);
+    const [pagination, setPagination] = useState<Pagination>({
+        page: 1,
+        limit: 25,
+        total: 0,
+        totalPages: 0,
+    });
     const [loading, setLoading] = useState(true);
     const [actionLoading, setActionLoading] = useState<number | null>(null);
 
@@ -87,20 +102,26 @@ export default function TokensPage() {
     const [generatedToken, setGeneratedToken] = useState<string | null>(null);
     const [copied, setCopied] = useState(false);
 
-    const fetchTokens = useCallback(async () => {
+    const fetchTokens = useCallback(async (page = pagination.page) => {
         setLoading(true);
         try {
-            const res = await fetch("/api/admin/tokens");
+            const params = new URLSearchParams({
+                page: String(page),
+                limit: String(pagination.limit),
+            });
+            const res = await fetch(`/api/admin/tokens?${params}`);
             const data = await res.json();
             if (data.status === "success") {
                 setTokens(data.data);
+                setPagination(data.pagination);
             }
         } catch {
             console.error("Failed to fetch tokens");
         } finally {
             setLoading(false);
         }
-    }, []);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [pagination.limit]);
 
     useEffect(() => {
         fetchTokens();
@@ -127,7 +148,7 @@ export default function TokensPage() {
                 setShowCreateModal(false);
                 setNewTokenName("");
                 setNewTokenExpiry("");
-                fetchTokens();
+                fetchTokens(1);
             }
         } catch {
             console.error("Failed to create token");
@@ -179,7 +200,7 @@ export default function TokensPage() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ id, action: "revoke" }),
             });
-            if (res.ok) fetchTokens();
+            if (res.ok) fetchTokens(pagination.page);
         } catch {
             console.error("Failed to revoke token");
         } finally {
@@ -257,11 +278,11 @@ export default function TokensPage() {
                         API Tokens
                     </h1>
                     <p className="text-sm text-muted-foreground mt-1">
-                        Manage bearer tokens for API access
+                        {pagination.total} token{pagination.total !== 1 ? "s" : ""} &mdash; manage bearer tokens for API access
                     </p>
                 </div>
                 <div className="flex gap-2">
-                    <Button variant="outline" size="sm" onClick={fetchTokens}>
+                    <Button variant="outline" size="sm" onClick={() => fetchTokens(pagination.page)}>
                         <RefreshCw className="w-4 h-4" />
                         Refresh
                     </Button>
@@ -415,6 +436,35 @@ export default function TokensPage() {
                     </table>
                 </div>
             </div>
+
+            {/* Pagination */}
+            {pagination.totalPages > 1 && (
+                <div className="flex items-center justify-between">
+                    <p className="text-sm text-muted-foreground">
+                        Page {pagination.page} of {pagination.totalPages}
+                    </p>
+                    <div className="flex gap-2">
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => fetchTokens(pagination.page - 1)}
+                            disabled={pagination.page <= 1 || loading}
+                        >
+                            <ChevronLeft className="w-4 h-4" />
+                            Previous
+                        </Button>
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => fetchTokens(pagination.page + 1)}
+                            disabled={pagination.page >= pagination.totalPages || loading}
+                        >
+                            Next
+                            <ChevronRight className="w-4 h-4" />
+                        </Button>
+                    </div>
+                </div>
+            )}
 
             {/* Create Token Dialog */}
             <Dialog open={showCreateModal} onOpenChange={setShowCreateModal}>

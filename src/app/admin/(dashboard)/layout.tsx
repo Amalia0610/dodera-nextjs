@@ -12,6 +12,7 @@ import {
     LayoutDashboard,
     Loader2,
     ImageIcon,
+    MessageSquare,
 } from "lucide-react";
 
 interface AdminSession {
@@ -22,6 +23,7 @@ interface AdminSession {
 
 const NAV_ITEMS = [
     { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
+    { href: "/admin/contacts", label: "Contacts", icon: MessageSquare },
     { href: "/admin/subscribers", label: "Subscribers", icon: Users },
     { href: "/admin/tokens", label: "API Tokens", icon: Key },
     { href: "/admin/generate-image", label: "Generate Image", icon: ImageIcon },
