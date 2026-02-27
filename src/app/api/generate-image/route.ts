@@ -2,6 +2,7 @@ import "server-only";
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 import { authenticateRequest } from "@/lib/api-auth";
+import { buildImagePrompt } from "./prompts";
 
 /* ── Model ──────────────────────────────────────────────────── */
 
@@ -38,33 +39,9 @@ export async function POST(request: NextRequest) {
     }
 
     /* ── 3. Determine prompt ─────────────────────────────────── */
-    let imagePrompt: string;
+    const imagePrompt = buildImagePrompt(body);
 
-    if (typeof body.prompt === "string" && body.prompt.trim().length > 0) {
-        /* Case 1: explicit prompt */
-        imagePrompt = body.prompt.trim();
-    } else if (typeof body.title === "string" && body.title.trim().length > 0) {
-        /* Case 2: derive prompt from blog post fields */
-        const title = (body.title as string).trim();
-        const excerpt = typeof body.excerpt === "string" ? body.excerpt.trim() : "";
-        const category = typeof body.category === "string" ? body.category.trim() : "";
-        const tags = Array.isArray(body.tags)
-            ? (body.tags as unknown[])
-                .filter((t): t is string => typeof t === "string")
-                .join(", ")
-            : "";
-
-        imagePrompt = [
-            `Create a professional, modern featured image for a blog post titled: "${title}".`,
-            excerpt ? `The article is about: ${excerpt}` : "",
-            category ? `Category: ${category}.` : "",
-            tags ? `Related topics: ${tags}.` : "",
-            "Style: clean, corporate tech aesthetic with abstract digital elements. No text or letters in the image.",
-        ]
-            .filter(Boolean)
-            .join(" ");
-    } else {
-        /* Neither prompt nor blog post fields provided */
+    if (!imagePrompt) {
         return NextResponse.json(
             {
                 status: "error",

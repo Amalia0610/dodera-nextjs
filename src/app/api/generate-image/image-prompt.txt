@@ -1,0 +1,5 @@
+Create a professional, modern featured image for a blog post titled: "{{TITLE}}".
+The article is about: {{EXCERPT}}
+Category: {{CATEGORY}}
+Related topics: {{TAGS}}
+Style: clean, corporate tech aesthetic with abstract digital elements. No text or letters in the image.
