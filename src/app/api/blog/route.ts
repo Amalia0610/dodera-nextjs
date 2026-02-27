@@ -21,9 +21,55 @@ const richTextNodeSchema = z.object({
 }).passthrough();
 
 /**
+ * Parse markdown-style links [anchor](url) out of a raw string.
+ * Returns the plain text (link syntax removed) and Prismic hyperlink spans.
+ * Relative URLs (e.g. /services/ai-development) are expanded to absolute.
+ */
+const SITE_ORIGIN = "https://doderasoft.com";
+const LINK_RE = /\[([^\]]+)\]\(((?:https?:\/\/|\/)[^)]+)\)/g;
+
+function extractHyperlinkSpans(raw: string): {
+    plainText: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    spans: any[];
+} {
+    let plainText = "";
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const spans: any[] = [];
+    let lastIndex = 0;
+
+    LINK_RE.lastIndex = 0; // reset stateful regex
+    let match: RegExpExecArray | null;
+
+    while ((match = LINK_RE.exec(raw)) !== null) {
+        const [fullMatch, anchorText, url] = match;
+        plainText += raw.slice(lastIndex, match.index);
+
+        const spanStart = plainText.length;
+        plainText += anchorText;
+        const spanEnd = plainText.length;
+
+        const absoluteUrl = url.startsWith("/") ? `${SITE_ORIGIN}${url}` : url;
+
+        spans.push({
+            type: "hyperlink",
+            start: spanStart,
+            end: spanEnd,
+            data: { link_type: "Web", url: absoluteUrl },
+        });
+
+        lastIndex = match.index + fullMatch.length;
+    }
+
+    plainText += raw.slice(lastIndex);
+    return { plainText, spans };
+}
+
+/**
  * Convert a plain-text string to a Prismic RichText paragraph array.
  * Double newlines split into separate paragraphs.
  * Lines starting with `## ` become heading2, `### ` heading3.
+ * Markdown links [text](url) inside paragraphs become Prismic hyperlink spans.
  */
 function textToRichText(text: string): prismic.RichTextField {
     const blocks = text.split(/\n{2,}/);
@@ -54,10 +100,12 @@ function textToRichText(text: string): prismic.RichTextField {
                 };
             }
 
+            // Paragraph — extract hyperlink spans from markdown links
+            const { plainText, spans } = extractHyperlinkSpans(trimmed);
             return {
                 type: prismic.RichTextNodeType.paragraph,
-                text: trimmed,
-                spans: [],
+                text: plainText,
+                spans,
             };
         });
 
