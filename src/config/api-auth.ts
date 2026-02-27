@@ -22,4 +22,5 @@ export const PUBLIC_API_ROUTES: string[] = [
     "/api/revalidate",
     "/api/preview",
     "/api/exit-preview",
+    "/api/admin",   // admin routes use their own JWT-based auth
 ];

@@ -10,7 +10,8 @@
     "slicemachine": "start-slicemachine",
     "token:generate": "npx tsx --env-file=.env scripts/generate-api-token.ts",
     "token:revoke": "npx tsx --env-file=.env scripts/revoke-api-token.ts",
-    "token:list": "npx tsx --env-file=.env scripts/list-api-tokens.ts"
+    "token:list": "npx tsx --env-file=.env scripts/list-api-tokens.ts",
+    "admin:seed": "npx tsx --env-file=.env scripts/seed-admin.ts"
   },
   "dependencies": {
     "@prismicio/client": "^7.21.6",
@@ -22,9 +23,11 @@
     "@radix-ui/react-tooltip": "^1.2.8",
     "@supabase/supabase-js": "^2.97.0",
     "@vercel/analytics": "^1.6.1",
+    "bcryptjs": "^3.0.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.34.2",
+    "jose": "^6.1.3",
     "lucide-react": "^0.575.0",
     "next": "16.1.6",
     "next-themes": "^0.4.6",
@@ -40,6 +43,7 @@
   "devDependencies": {
     "@slicemachine/adapter-next": "^0.3.95",
     "@tailwindcss/typography": "^0.5.19",
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
