@@ -26,7 +26,7 @@ export function Terminal() {
     }, [visibleLines]);
 
     return (
-        <div className="w-full overflow-hidden rounded-lg border border-border bg-card/80">
+        <div className="w-full overflow-hidden rounded-lg border border-border bg-card shadow-lg">
             {/* Title bar */}
             <div className="flex items-center gap-2 border-b border-border px-4 py-3">
                 <div className="flex gap-1.5">
@@ -46,8 +46,8 @@ export function Terminal() {
                         key={i}
                         className={cn(
                             "flex items-start gap-2",
-                            line.type === "success" && "text-emerald-400",
-                            line.type === "error" && "text-red-400",
+                            line.type === "success" && "text-emerald-600",
+                            line.type === "error" && "text-red-600",
                             line.type === "input" && "text-foreground",
                             line.type === "output" && "text-muted-foreground"
                         )}

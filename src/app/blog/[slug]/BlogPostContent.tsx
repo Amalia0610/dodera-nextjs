@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { motion } from "framer-motion";
 import { ArrowLeft, Calendar, Clock, Tag, User } from "lucide-react";
@@ -98,7 +98,7 @@ export function BlogPostContent({ post }: BlogPostContentProps) {
                                 <Badge
                                     key={tag}
                                     variant="outline"
-                                    className="border-white/[0.08] bg-white/[0.03] text-xs text-muted-foreground"
+                                    className="border-input text-xs text-muted-foreground"
                                 >
                                     <Tag className="mr-1 size-3" />
                                     {tag}
@@ -125,7 +125,7 @@ export function BlogPostContent({ post }: BlogPostContentProps) {
                                     className="rounded-full"
                                 />
                             ) : (
-                                <div className="flex size-10 items-center justify-center rounded-full bg-white/[0.06]">
+                                <div className="flex size-10 items-center justify-center rounded-full bg-muted">
                                     <User className="size-5 text-muted-foreground" />
                                 </div>
                             )}
@@ -149,7 +149,7 @@ export function BlogPostContent({ post }: BlogPostContentProps) {
                             initial="hidden"
                             animate="visible"
                             transition={{ duration: 0.5, delay: 0.3 }}
-                            className="relative aspect-[16/9] overflow-hidden rounded-xl border border-white/[0.06]"
+                            className="relative aspect-[16/9] overflow-hidden rounded-xl border border-border"
                         >
                             <Image
                                 src={post.image}
@@ -169,16 +169,21 @@ export function BlogPostContent({ post }: BlogPostContentProps) {
                 <div className="mx-auto max-w-3xl px-6">
                     {post.body ? (
                         <article
-                            className="prose prose-invert prose-lg max-w-none
-                prose-headings:font-bold prose-headings:tracking-tight
+                            className="prose prose-lg max-w-none
+                prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-foreground
+                prose-p:text-foreground/80 prose-p:leading-relaxed
+                prose-strong:text-foreground prose-strong:font-semibold
                 prose-a:text-primary prose-a:no-underline hover:prose-a:underline
-                prose-code:rounded prose-code:bg-white/[0.06] prose-code:px-1.5 prose-code:py-0.5
-                prose-pre:bg-white/[0.03] prose-pre:border prose-pre:border-white/[0.06]
-                prose-img:rounded-xl"
+                prose-li:text-foreground/80
+                prose-blockquote:border-l-primary prose-blockquote:text-foreground/70
+                prose-code:rounded prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:text-foreground prose-code:font-normal
+                prose-pre:bg-muted prose-pre:border prose-pre:border-border
+                prose-img:rounded-xl
+                prose-hr:border-border"
                             dangerouslySetInnerHTML={{ __html: post.body }}
                         />
                     ) : (
-                        <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-12 text-center">
+                        <div className="rounded-xl border border-border bg-card p-12 text-center">
                             <p className="text-lg text-muted-foreground">
                                 Full article content coming soon.
                             </p>

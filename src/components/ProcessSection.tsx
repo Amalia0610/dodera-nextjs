@@ -28,20 +28,20 @@ export function ProcessSection() {
                                     transition={{ type: "spring", stiffness: 300, damping: 22, delay: i * 0.12 }}
                                     className="relative z-10"
                                 >
-                                    <div className="size-3.5 rounded-full border-2 border-primary/40 bg-primary/20 transition-all duration-500 group-hover:border-primary group-hover:bg-primary group-hover:shadow-[0_0_20px_rgba(225,67,43,0.6)]" />
+                                    <div className="size-3.5 rounded-full border-2 border-primary/40 bg-primary/20 transition-all duration-500 group-hover:border-primary group-hover:bg-primary group-hover:shadow-[0_0_20px_rgba(196,28,56,0.5)]" />
                                 </motion.div>
 
                                 {/* Arrow line to next dot */}
                                 {i < PROCESS_STEPS.length - 1 && (
                                     <div className="absolute left-[50%] top-[6px] -z-0 h-px w-full">
-                                        <div className="absolute inset-0 bg-gradient-to-r from-white/[0.06] via-white/[0.10] to-white/[0.06] transition-all duration-500 group-hover:from-primary/20 group-hover:via-primary/40 group-hover:to-primary/20" />
+                                        <div className="absolute inset-0 bg-gradient-to-r from-border via-border/70 to-border transition-all duration-500 group-hover:from-primary/20 group-hover:via-primary/40 group-hover:to-primary/20" />
                                         <div className="absolute inset-0 opacity-0 blur-[3px] transition-opacity duration-500 group-hover:opacity-100 bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
                                         <motion.div
                                             className="absolute top-[-1px] h-[3px] w-8 rounded-full bg-primary/60 opacity-0 blur-[2px] group-hover:opacity-100"
                                             animate={{ x: [0, 200, 0] }}
                                             transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: i * 0.5 }}
                                         />
-                                        <div className="absolute -top-[4px] right-0 size-0 border-y-[5px] border-l-[7px] border-y-transparent border-l-white/[0.10] transition-all duration-500 group-hover:border-l-primary/50" />
+                                        <div className="absolute -top-[4px] right-0 size-0 border-y-[5px] border-l-[7px] border-y-transparent border-l-border/60 transition-all duration-500 group-hover:border-l-primary/50" />
                                     </div>
                                 )}
 
@@ -78,10 +78,10 @@ export function ProcessSection() {
                                     transition={{ type: "spring", stiffness: 300, damping: 22, delay: i * 0.1 }}
                                     className="relative z-10 mt-1"
                                 >
-                                    <div className="size-3 rounded-full border-2 border-primary/40 bg-primary/20 transition-all duration-500 group-hover:border-primary group-hover:bg-primary group-hover:shadow-[0_0_16px_rgba(225,67,43,0.5)]" />
+                                    <div className="size-3 rounded-full border-2 border-primary/40 bg-primary/20 transition-all duration-500 group-hover:border-primary group-hover:bg-primary group-hover:shadow-[0_0_16px_rgba(196,28,56,0.4)]" />
                                 </motion.div>
                                 {i < PROCESS_STEPS.length - 1 && (
-                                    <div className="relative w-px flex-1 bg-white/[0.08] transition-colors duration-500 group-hover:bg-primary/30">
+                                    <div className="relative w-px flex-1 bg-border transition-colors duration-500 group-hover:bg-primary/30">
                                         <div className="absolute inset-0 w-px opacity-0 blur-[2px] transition-opacity duration-500 group-hover:opacity-100 bg-primary/40" />
                                     </div>
                                 )}

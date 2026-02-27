@@ -76,9 +76,9 @@ export function Footer() {
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     aria-label={social.label}
-                                    className="flex size-9 items-center justify-center rounded-md border border-white/[0.08] bg-white/[0.03] backdrop-blur-sm transition-all hover:border-white/[0.15] hover:bg-white/[0.08]"
+                                    className="flex size-9 items-center justify-center rounded-md border border-border bg-muted/50 transition-all hover:bg-muted"
                                 >
-                                    <social.icon className="size-4 text-muted-foreground/60 transition-colors hover:text-muted-foreground" />
+                                    <social.icon className="size-4 text-muted-foreground transition-colors hover:text-foreground" />
                                 </a>
                             ))}
                         </div>
@@ -149,7 +149,7 @@ export function Footer() {
                         </p>
 
                         {nlStatus === "success" ? (
-                            <p className="flex items-center gap-2 text-sm text-emerald-400">
+                            <p className="flex items-center gap-2 text-sm text-emerald-600">
                                 <Send className="size-3.5" />
                                 Subscribed!
                             </p>
@@ -168,10 +168,10 @@ export function Footer() {
                                     }}
                                     aria-label="Email address for newsletter"
                                     aria-invalid={nlStatus === "error"}
-                                    className="border-white/[0.08] bg-white/[0.03]"
+                                    className="border-border"
                                 />
                                 {nlStatus === "error" && (
-                                    <p className="flex items-center gap-1 text-xs text-red-400">
+                                    <p className="flex items-center gap-1 text-xs text-red-600">
                                         <AlertCircle className="size-3 shrink-0" /> {nlError}
                                     </p>
                                 )}

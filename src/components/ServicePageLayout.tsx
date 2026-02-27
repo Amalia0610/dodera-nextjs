@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { motion } from "framer-motion";
 import { ArrowRight, ChevronRight, Bot, Workflow, Rocket, Building2, Cloud, BookOpen } from "lucide-react";
@@ -221,9 +221,9 @@ export function ServicePageLayout({ data }: ServicePageLayoutProps) {
                                     >
                                         <Link
                                             href={child.href}
-                                            className="group flex h-full flex-col rounded-xl border border-white/[0.06] bg-white/[0.02] p-6 backdrop-blur-sm transition-all hover:border-white/[0.12] hover:bg-white/[0.04]"
+                                            className="group flex h-full flex-col rounded-xl border border-border bg-card p-6 shadow-sm transition-all hover:border-primary/20 hover:shadow-md"
                                         >
-                                            <div className="mb-6 flex size-12 items-center justify-center rounded-lg border border-white/[0.06] bg-white/[0.04]">
+                                            <div className="mb-6 flex size-12 items-center justify-center rounded-lg border border-border bg-primary/10">
                                                 <Icon className="size-6 text-primary" />
                                             </div>
                                             <h3 className="mb-2 text-lg font-semibold group-hover:text-primary transition-colors">
@@ -323,7 +323,7 @@ export function ServicePageLayout({ data }: ServicePageLayoutProps) {
                                 >
                                     <Link
                                         href={rs.href}
-                                        className="group flex items-center justify-between rounded-xl border border-white/[0.06] bg-white/[0.02] p-5 backdrop-blur-sm transition-colors hover:bg-white/[0.04]"
+                                        className="group flex items-center justify-between rounded-xl border border-border bg-card p-5 transition-colors hover:bg-accent/40"
                                     >
                                         <span className="text-sm font-medium">{rs.label}</span>
                                         <ArrowRight className="size-4 text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-primary" />

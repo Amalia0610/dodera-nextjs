@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { Send, User, Mail, MessageSquare, Building, Phone, AlertCircle } from "lucide-react";
@@ -144,9 +144,9 @@ export function ContactForm() {
 
     if (submitted) {
         return (
-            <div className="mx-auto max-w-lg rounded-xl border border-white/[0.06] bg-white/[0.02] p-10 text-center backdrop-blur-sm">
-                <div className="mx-auto mb-4 flex size-14 items-center justify-center rounded-full border border-emerald-500/20 bg-emerald-500/10">
-                    <Send className="size-6 text-emerald-400" />
+            <div className="mx-auto max-w-lg rounded-xl border border-border bg-card p-10 text-center shadow-sm">
+                <div className="mx-auto mb-4 flex size-14 items-center justify-center rounded-full border border-emerald-200 bg-emerald-50">
+                    <Send className="size-6 text-emerald-600" />
                 </div>
                 <h3 className="mb-2 text-xl font-bold">Message Sent</h3>
                 <p className="text-sm text-muted-foreground">
@@ -158,7 +158,7 @@ export function ContactForm() {
 
     const fieldErr = (msg?: string) =>
         msg ? (
-            <p className="flex items-center gap-1 text-xs text-red-400 mt-1">
+            <p className="flex items-center gap-1 text-xs text-red-600 mt-1">
                 <AlertCircle className="size-3 shrink-0" /> {msg}
             </p>
         ) : null;
@@ -168,7 +168,7 @@ export function ContactForm() {
             onSubmit={handleSubmit}
             noValidate
             aria-label="Contact form to get in touch with Dodera Software for project inquiries"
-            className="mx-auto max-w-lg space-y-5 rounded-xl border border-white/[0.06] bg-white/[0.02] p-8 backdrop-blur-sm"
+            className="mx-auto max-w-lg space-y-5 rounded-xl border border-border bg-card p-8 shadow-sm"
         >
             {/* Honeypot */}
             <div className="absolute -left-[9999px] opacity-0" aria-hidden="true">
@@ -191,7 +191,7 @@ export function ContactForm() {
                         maxLength={LIMITS.name.max}
                         minLength={LIMITS.name.min}
                         aria-invalid={!!errors.name}
-                        className="border-white/[0.08] bg-white/[0.03]"
+                        className="border-input"
                     />
                     {fieldErr(errors.name)}
                 </div>
@@ -209,7 +209,7 @@ export function ContactForm() {
                         placeholder="you@company.com"
                         maxLength={LIMITS.email.max}
                         aria-invalid={!!errors.email}
-                        className="border-white/[0.08] bg-white/[0.03]"
+                        className="border-input"
                     />
                     {fieldErr(errors.email)}
                 </div>
@@ -228,7 +228,7 @@ export function ContactForm() {
                         placeholder="Company name"
                         maxLength={LIMITS.company.max}
                         aria-invalid={!!errors.company}
-                        className="border-white/[0.08] bg-white/[0.03]"
+                        className="border-input"
                     />
                     {fieldErr(errors.company)}
                 </div>
@@ -246,14 +246,14 @@ export function ContactForm() {
                         maxLength={LIMITS.phone.max}
                         pattern="[+]?[\d\s()\-]{7,20}"
                         aria-invalid={!!errors.phone}
-                        className="border-white/[0.08] bg-white/[0.03]"
+                        className="border-input"
                     />
                     {fieldErr(errors.phone)}
                 </div>
             </div>
 
             {serverError && (
-                <div className="flex items-center gap-2 rounded-lg border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-400">
+                <div className="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
                     <AlertCircle className="size-4 shrink-0" />
                     {serverError}
                 </div>
@@ -273,7 +273,7 @@ export function ContactForm() {
                     maxLength={LIMITS.message.max}
                     minLength={LIMITS.message.min}
                     aria-invalid={!!errors.message}
-                    className="resize-none border-white/[0.08] bg-white/[0.03]"
+                    className="resize-none border-input"
                 />
                 {fieldErr(errors.message)}
             </div>

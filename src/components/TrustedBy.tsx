@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { motion } from "framer-motion";
 import { TRUSTED_LOGOS, SOCIAL_LINKS } from "@/config/site";
@@ -25,9 +25,9 @@ export function TrustedBy() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 aria-label={social.label}
-                                className="flex size-9 items-center justify-center rounded-md border border-white/[0.08] bg-white/[0.03] backdrop-blur-sm transition-all hover:border-white/[0.15] hover:bg-white/[0.08]"
+                                className="flex size-9 items-center justify-center rounded-md border border-border bg-muted/50 transition-all hover:bg-muted"
                             >
-                                <social.icon className="size-4 text-muted-foreground/60 transition-colors hover:text-muted-foreground" />
+                                <social.icon className="size-4 text-muted-foreground transition-colors hover:text-foreground" />
                             </a>
                         ))}
                     </div>
@@ -42,7 +42,7 @@ export function TrustedBy() {
                             whileInView="visible"
                             viewport={viewportOnce}
                             transition={{ delay: i * 0.08, duration: 0.4 }}
-                            className="select-none text-lg font-bold tracking-tight text-muted-foreground/30 transition-colors hover:text-muted-foreground/60"
+                            className="select-none text-lg font-bold tracking-tight text-muted-foreground/40 transition-colors hover:text-muted-foreground/70"
                         >
                             {name}
                         </motion.span>
@@ -62,9 +62,9 @@ export function TrustedBy() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 aria-label={social.label}
-                                className="flex size-9 items-center justify-center rounded-md border border-white/[0.08] bg-white/[0.03] backdrop-blur-sm transition-all hover:border-white/[0.15] hover:bg-white/[0.08]"
+                                className="flex size-9 items-center justify-center rounded-md border border-border bg-muted/50 transition-all hover:bg-muted"
                             >
-                                <social.icon className="size-4 text-muted-foreground/60 transition-colors hover:text-muted-foreground" />
+                                <social.icon className="size-4 text-muted-foreground transition-colors hover:text-foreground" />
                             </a>
                         ))}
                     </div>

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { motion } from "framer-motion";
 import { ArrowRight, Calendar, Clock } from "lucide-react";
@@ -70,7 +70,7 @@ export function BlogPageContent({ posts }: BlogPageContentProps) {
                                     whileInView="visible"
                                     viewport={viewportOnce}
                                     transition={stagger(i % 3)}
-                                    className="group flex flex-col overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.02] backdrop-blur-sm transition-colors hover:bg-white/[0.04]"
+                                    className="group flex flex-col overflow-hidden rounded-xl border border-border bg-card transition-colors hover:border-primary/20 hover:bg-accent/30"
                                 >
                                     {post.image && (
                                         <div className="relative aspect-[16/9] w-full overflow-hidden">
@@ -111,14 +111,14 @@ export function BlogPageContent({ posts }: BlogPageContentProps) {
                                                 <Badge
                                                     key={tag}
                                                     variant="outline"
-                                                    className="border-white/[0.08] bg-white/[0.03] text-[10px] text-muted-foreground"
+                                                    className="border-input text-[10px] text-muted-foreground"
                                                 >
                                                     {tag}
                                                 </Badge>
                                             ))}
                                         </div>
 
-                                        <div className="flex items-center justify-between border-t border-white/[0.06] pt-4">
+                                        <div className="flex items-center justify-between border-t border-border pt-4">
                                             <time
                                                 dateTime={post.date}
                                                 className="flex items-center gap-1.5 text-xs text-muted-foreground"

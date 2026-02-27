@@ -41,7 +41,7 @@ export function Navbar() {
                                     transition={{ duration: 0.15 }}
                                     className="absolute right-0 top-full z-50 mt-2 w-[640px]"
                                 >
-                                    <div className="rounded-lg border border-white/[0.08] bg-background/95 p-6 shadow-xl backdrop-blur-xl">
+                                    <div className="rounded-lg border border-border bg-background/95 p-6 shadow-xl backdrop-blur-xl">
                                         <div className="grid grid-cols-3 gap-6">
                                             {SERVICES.map((s) => (
                                                 <div key={s.title}>
@@ -99,9 +99,9 @@ export function Navbar() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 aria-label={social.label}
-                                className="flex size-8 items-center justify-center rounded-md border border-white/[0.08] bg-white/[0.03] backdrop-blur-sm transition-all hover:border-white/[0.15] hover:bg-white/[0.08]"
+                                className="flex size-8 items-center justify-center rounded-md border border-border bg-muted/50 transition-all hover:border-border hover:bg-muted"
                             >
-                                <social.icon className="size-4 text-muted-foreground/60 transition-colors hover:text-muted-foreground" />
+                                <social.icon className="size-4 text-muted-foreground transition-colors hover:text-foreground" />
                             </a>
                         ))}
                     </div>
@@ -182,9 +182,9 @@ export function Navbar() {
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         aria-label={social.label}
-                                        className="flex size-9 items-center justify-center rounded-md border border-white/[0.08] bg-white/[0.03] backdrop-blur-sm transition-all hover:border-white/[0.15] hover:bg-white/[0.08]"
+                                        className="flex size-9 items-center justify-center rounded-md border border-border bg-muted/50 transition-all hover:bg-muted"
                                     >
-                                        <social.icon className="size-4 text-muted-foreground/60" />
+                                        <social.icon className="size-4 text-muted-foreground" />
                                     </a>
                                 ))}
                             </div>

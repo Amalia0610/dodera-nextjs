@@ -29,7 +29,7 @@ export function ServicesSection() {
                             whileInView="visible"
                             viewport={viewportOnce}
                             transition={stagger(i)}
-                            className="group flex flex-col rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden backdrop-blur-sm transition-colors hover:bg-white/[0.04]"
+                            className="group flex flex-col rounded-xl border border-border bg-card overflow-hidden shadow-sm transition-all hover:shadow-md hover:border-primary/20"
                         >
                             {s.image ? (
                                 <div className="relative h-44 w-full overflow-hidden">
@@ -44,7 +44,7 @@ export function ServicesSection() {
                                 </div>
                             ) : (
                                 <div className="px-8 pt-8">
-                                    <div className="mb-6 flex size-12 items-center justify-center rounded-lg border border-white/[0.06] bg-white/[0.04]">
+                                    <div className="mb-6 flex size-12 items-center justify-center rounded-lg border border-border bg-primary/10">
                                         <s.icon className="size-6 text-primary" />
                                     </div>
                                 </div>
@@ -60,7 +60,7 @@ export function ServicesSection() {
                                         <Badge
                                             key={tag}
                                             variant="outline"
-                                            className="border-white/[0.08] bg-white/[0.03] text-[11px] text-muted-foreground"
+                                            className="border-border bg-muted/50 text-[11px] text-muted-foreground"
                                         >
                                             {tag}
                                         </Badge>
