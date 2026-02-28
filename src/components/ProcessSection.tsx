@@ -39,7 +39,7 @@ export function ProcessSection() {
                                         <motion.div
                                             className="absolute top-[-1px] h-[3px] w-8 rounded-full bg-primary/60 opacity-0 blur-[2px] group-hover:opacity-100"
                                             animate={{ x: [0, 260] }}
-                                            transition={{ duration: 1.2, ease: "linear", delay: i * 0.5 }}
+                                            transition={{ duration: 1.2, repeat: Infinity, repeatType: "loop", ease: "linear", delay: i * 0.5 }}
                                         />
                                         <div className="absolute -top-[4px] right-0 size-0 border-y-[5px] border-l-[7px] border-y-transparent border-l-border/60 transition-all duration-500 group-hover:border-l-primary/50" />
                                     </div>
