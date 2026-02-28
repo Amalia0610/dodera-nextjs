@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, Menu, X } from "lucide-react";
 import Link from "next/link";
@@ -11,6 +11,13 @@ import { SERVICES, NAV_LINKS, SOCIAL_LINKS } from "@/config/site";
 export function Navbar() {
     const [megaOpen, setMegaOpen] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
+
+    useEffect(() => {
+        document.body.style.overflow = mobileOpen ? "hidden" : "";
+        return () => {
+            document.body.style.overflow = "";
+        };
+    }, [mobileOpen]);
 
     return (
         <nav aria-label="Main navigation" className="fixed inset-x-0 top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl">
