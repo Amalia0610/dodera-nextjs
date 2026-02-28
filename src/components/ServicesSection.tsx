@@ -29,7 +29,7 @@ export function ServicesSection() {
                             whileInView="visible"
                             viewport={viewportOnce}
                             transition={stagger(i)}
-                            className="group flex flex-col rounded-xl border border-border bg-card overflow-hidden shadow-sm transition-all hover:shadow-md hover:border-primary/20"
+                            className="group flex flex-col rounded-xl border border-border bg-card overflow-hidden shadow-sm transition-[box-shadow,border-color] hover:shadow-md hover:border-primary/20"
                         >
                             {s.image ? (
                                 <div className="relative h-44 w-full overflow-hidden">
