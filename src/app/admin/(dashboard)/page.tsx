@@ -60,7 +60,6 @@ export default function AdminDashboardPage() {
     // Auto-post
     const [posting, setPosting] = useState(false);
     const [postResult, setPostResult] = useState<AutoPostResult | null>(null);
-    const [publish, setPublish] = useState(false);
     const [showOptions, setShowOptions] = useState(false);
     const [authorName, setAuthorName] = useState("Dodera Team");
 
@@ -98,14 +97,14 @@ export default function AdminDashboardPage() {
     }, []);
 
     async function handleAutoPost() {
-        if (!confirm(`Generate and ${publish ? "publish" : "save as draft"} a new blog post?`)) return;
+        if (!confirm("Generate and save as draft a new blog post?")) return;
         setPosting(true);
         setPostResult(null);
         try {
             const res = await fetch("/api/admin/trigger-autopost", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ publish, author_name: authorName }),
+                body: JSON.stringify({ publish: false, author_name: authorName }),
             });
             const data = await res.json();
             setPostResult(data);
@@ -234,16 +233,6 @@ export default function AdminDashboardPage() {
 
                     {showOptions && (
                         <div className="mt-3 flex flex-wrap gap-4 items-center">
-                            <label className="flex items-center gap-2 text-sm cursor-pointer select-none">
-                                <input
-                                    type="checkbox"
-                                    checked={publish}
-                                    onChange={(e) => setPublish(e.target.checked)}
-                                    className="rounded border-input accent-primary"
-                                />
-                                Publish immediately
-                                <span className="text-xs text-muted-foreground">(unchecked = draft)</span>
-                            </label>
                             <label className="flex items-center gap-2 text-sm">
                                 Author name
                                 <Input
