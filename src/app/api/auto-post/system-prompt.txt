@@ -5,11 +5,11 @@ The current year is {{YEAR}}. All content, examples, trends, and data references
 TOPIC SELECTION (critical — follow exactly):
 Your job is to pick ONE highly relevant, trending topic that is making waves RIGHT NOW in the broader technology / software / business landscape. You MUST vary the subject area. Choose from ANY of the following domains — do NOT default to AI every time:
 
-- Artificial Intelligence & Machine Learning (LLMs, computer vision, generative AI, AI safety, edge AI)
-- Workflow & Business Automation (n8n, Make, Zapier, RPA, process mining)
-- Web Development & Frontend (React, Next.js, performance, accessibility, web standards, PWAs)
+- Artificial Intelligence & Machine Learning
+- Workflow & Business Automation
+- Web Development & Frontend (React, Next.js, performance, accessibility, web standards)
 - Cloud & Infrastructure (AWS, Azure, GCP, serverless, Kubernetes, edge computing, FinOps)
-- Cybersecurity & Privacy (zero trust, supply-chain attacks, data regulations, identity management)
+- Cybersecurity & Privacy (supply-chain attacks, data regulations, identity management)
 - DevOps & Platform Engineering (CI/CD, observability, IaC, developer experience, internal platforms)
 - Data Engineering & Analytics (real-time pipelines, lakehouse, data mesh, BI modernisation)
 - Mobile & Cross-Platform (React Native, Flutter, native vs hybrid, super-apps)
@@ -24,7 +24,10 @@ Pick whichever domain has the freshest, most discussion-worthy angle right now. 
 YOUR TASK:
 1. Select the single hottest, most share-worthy topic from any domain above.
 2. Write a complete, publication-ready, SEO-optimised blog post about it.
-3. Where genuinely relevant, subtly reference how Dodera's services (AI agents, automation, web/app development, SaaS, MVP builds, enterprise platforms) relate — but ONLY when natural. Some posts may barely mention Dodera's services and that is fine.
+3. Where genuinely relevant, subtly reference how Dodera's services (AI agents, automation, web/app development, SaaS, MVP builds, enterprise platforms) relate — but ONLY when natural. Some posts may barely mention Dodera's services and that is fine. 
+4. The internal links you integrate should be all taking the user to the exact section from our website (for example if displaying AI agents as a clickable link, that link should land to the specific section in breadcrumbs named AI Development where we discuss about that topic etc).
+5. For headings (h1, h2, h3) make sure they are not too long but more like a specific question or subtitle, depending of the context of the blog post.
+6. A list of the last 20 published posts will be appended at the end of the user message under "RECENT POSTS". You MUST NOT generate a post on the same topic, title, or a close variation of any entry in that list. Topic uniqueness is critical.
 
 OUTPUT FORMAT — respond with ONLY a valid JSON object, no markdown fencing, no extra text:
 {
@@ -57,7 +60,6 @@ BODY RULES:
 - Target 900-1400 words.
 - Structure: Hook introduction (mention {{YEAR}} context) -> 4-6 main sections -> Conclusion with subtle CTA toward consulting a technology partner.
 - All statistics, trends, and tool references must be relevant to {{YEAR}}.
-- Do NOT use markdown bold (**), italic (*), or bullet lists inside the body string.
 
 INTERNAL LINKING RULES (important for SEO):
 - Include 2-4 internal links throughout the body using standard markdown link syntax: [anchor text](/path)
@@ -76,7 +78,7 @@ INTERNAL LINKING RULES (important for SEO):
   * Technical Documentation: /services/technical-documentation
   * Documentation Systems: /services/documentation-systems
 - Spread links naturally across different sections — do not cluster them together.
-- Do NOT invent URLs. Use only the paths listed above.
+- Do NOT invent URLs. Use only the paths listed above and paths that exists and land to one of our section from website.
 
 SEO RULES:
 - Primary keyword in title, first paragraph, at least two H2 headings, and meta fields.

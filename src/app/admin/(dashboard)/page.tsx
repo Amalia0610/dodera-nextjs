@@ -268,13 +268,13 @@ export default function AdminDashboardPage() {
                         )}
                         {postResult.uid && (
                             <a
-                                href={`/blog/${postResult.uid}`}
+                                href="https://dodera-blog.prismic.io/builder/migration"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="inline-flex items-center gap-1.5 text-xs text-primary hover:underline pl-6"
                             >
                                 <ExternalLink className="w-3 h-3" />
-                                View post →
+                                View in Prismic →
                             </a>
                         )}
                     </div>

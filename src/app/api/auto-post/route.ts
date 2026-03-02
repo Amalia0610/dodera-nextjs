@@ -2,6 +2,7 @@ import "server-only";
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 import { authenticateRequest } from "@/lib/api-auth";
+import { supabase } from "@/lib/supabase";
 import {
     SYSTEM_PROMPT,
     getRandomTopicHint,
@@ -41,6 +42,31 @@ export async function GET(request: NextRequest) {
 
     /* ── 3. Validate OpenAI key ──────────────────────────────── */
     const openaiKey = process.env.OPENAI_API_KEY;
+
+    /* ── 3b. Fetch recent posts for topic deduplication ─────────── */
+    let recentPostsContext = "";
+    try {
+        const { data: recentPosts, error: dbError } = await supabase
+            .from("auto_generated_blog_posts")
+            .select("title, category, uid")
+            .order("created_at", { ascending: false })
+            .limit(20);
+
+        if (dbError) {
+            console.warn("[auto-post] Supabase fetch error — proceeding without deduplication:", dbError.message);
+        } else if (recentPosts && recentPosts.length > 0) {
+            const list = recentPosts
+                .map((p, i) => `${i + 1}. "${p.title}" (${p.category ?? "uncategorised"}) [uid: ${p.uid}]`)
+                .join("\n");
+            recentPostsContext = `\n\nRECENT POSTS — DO NOT repeat these topics, titles, or close variations of them:\n${list}`;
+            console.log(`[auto-post] Loaded ${recentPosts.length} recent post(s) for deduplication.`);
+        } else {
+            console.log("[auto-post] No previous posts found in Supabase — first generation.");
+        }
+    } catch (dbErr) {
+        console.warn("[auto-post] Could not fetch recent posts — proceeding without deduplication:", dbErr);
+    }
+
     if (!openaiKey || openaiKey.startsWith("sk-your-")) {
         console.error("[auto-post] OPENAI_API_KEY is not configured.");
         return NextResponse.json(
@@ -65,7 +91,7 @@ export async function GET(request: NextRequest) {
                 { role: "system", content: SYSTEM_PROMPT },
                 {
                     role: "user",
-                    content: `${getRandomTopicHint()}\n\nPick the single most trending, share-worthy topic in the technology space right now and write the full blog post. Output only the JSON object.`,
+                    content: `${getRandomTopicHint()}\n\nPick the single most trending, share-worthy topic in the technology space right now and write the full blog post. Output only the JSON object.${recentPostsContext}`,
                 },
             ],
         });
@@ -189,6 +215,23 @@ export async function GET(request: NextRequest) {
                 },
                 { status: blogResponse.status },
             );
+        }
+
+        /* ── 7b. Record post in Supabase for future deduplication ── */
+        try {
+            const { error: insertError } = await supabase.from("auto_generated_blog_posts").insert({
+                uid: generatedPost.uid,
+                title: generatedPost.title,
+                category: generatedPost.category,
+                tags: generatedPost.tags,
+            });
+            if (insertError) {
+                console.warn("[auto-post] Supabase insert warning (post saved to Prismic, deduplication record skipped):", insertError.message);
+            } else {
+                console.log(`[auto-post] Post recorded in Supabase — uid="${generatedPost.uid}"`);
+            }
+        } catch (insertErr) {
+            console.warn("[auto-post] Supabase insert failed — non-critical:", insertErr);
         }
 
         return NextResponse.json(
