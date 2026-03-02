@@ -49,7 +49,7 @@ const API_ENDPOINTS: ApiEndpoint[] = [
         params: [
             { name: "uid", type: "string", required: true, description: "URL slug for the blog post" },
             { name: "title", type: "string", required: true, description: "Blog post title" },
-            { name: "body", type: "string | RichText[]", required: true, description: "Post content — plain text, markdown, or Prismic RichText" },
+            { name: "body", type: "string | RichText[]", required: true, description: "Post content - plain text, markdown, or Prismic RichText" },
             { name: "excerpt", type: "string", required: false, description: "Short summary / excerpt" },
             { name: "tags", type: "string[]", required: false, description: "Array of tags" },
             { name: "category", type: "string", required: false, description: "Post category" },
@@ -406,7 +406,7 @@ export default function ApiDocsPage() {
             <div>
                 <h1 className="text-2xl font-bold tracking-tight">API Documentation</h1>
                 <p className="text-sm text-muted-foreground mt-1">
-                    Overview of all backend API endpoints — {API_ENDPOINTS.length} total
+                    Overview of all backend API endpoints - {API_ENDPOINTS.length} total
                 </p>
             </div>
 
