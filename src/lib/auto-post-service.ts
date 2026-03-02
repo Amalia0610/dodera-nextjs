@@ -10,6 +10,7 @@ import {
     type GeneratedPost,
 } from "@/app/api/auto-post/prompts";
 import { generateImageUrl } from "@/lib/generate-image-service";
+import { supabase } from "@/lib/supabase";
 
 const OPENAI_MODEL = process.env.AUTO_POST_OPENAI_MODEL ?? "gpt-4o";
 
@@ -85,6 +86,30 @@ export async function autoPost(options: AutoPostOptions = {}): Promise<AutoPostR
         return { status: "error", message: "OpenAI API key is not configured." };
     }
 
+    /* 1b. Fetch recent posts from Supabase for topic deduplication */
+    let recentPostsContext = "";
+    try {
+        const { data: recentPosts, error: dbError } = await supabase
+            .from("auto_generated_blog_posts")
+            .select("title, category, uid")
+            .order("created_at", { ascending: false })
+            .limit(20);
+
+        if (dbError) {
+            console.warn("[auto-post-service] Supabase fetch error — proceeding without deduplication:", dbError.message);
+        } else if (recentPosts && recentPosts.length > 0) {
+            const list = recentPosts
+                .map((p, i) => `${i + 1}. "${p.title}" (${p.category ?? "uncategorised"}) [uid: ${p.uid}]`)
+                .join("\n");
+            recentPostsContext = `\n\nRECENT POSTS — DO NOT repeat these topics, titles, or close variations of them:\n${list}`;
+            console.log(`[auto-post-service] Loaded ${recentPosts.length} recent post(s) for deduplication.`);
+        } else {
+            console.log("[auto-post-service] No previous posts in Supabase — first generation.");
+        }
+    } catch (dbErr) {
+        console.warn("[auto-post-service] Could not fetch recent posts — proceeding without deduplication:", dbErr);
+    }
+
     /* 2. Generate post content */
     let generatedPost: GeneratedPost;
     try {
@@ -98,7 +123,7 @@ export async function autoPost(options: AutoPostOptions = {}): Promise<AutoPostR
                 { role: "system", content: SYSTEM_PROMPT },
                 {
                     role: "user",
-                    content: `${getRandomTopicHint()}\n\nPick the single most trending, share-worthy topic in the technology space right now and write the full blog post. Output only the JSON object.`,
+                    content: `${getRandomTopicHint()}\n\nPick the single most trending, share-worthy topic in the technology space right now and write the full blog post. Output only the JSON object.${recentPostsContext}`,
                 },
             ],
         });
@@ -203,6 +228,23 @@ export async function autoPost(options: AutoPostOptions = {}): Promise<AutoPostR
         await writeClient.migrate(migration, {
             reporter: (event) => console.log(`[Prismic Migration] ${JSON.stringify(event)}`),
         });
+
+        /* Record in Supabase for future deduplication */
+        try {
+            const { error: insertError } = await supabase.from("auto_generated_blog_posts").insert({
+                uid: generatedPost.uid,
+                title: generatedPost.title,
+                category: generatedPost.category,
+                tags: generatedPost.tags,
+            });
+            if (insertError) {
+                console.warn("[auto-post-service] Supabase insert warning:", insertError.message);
+            } else {
+                console.log(`[auto-post-service] Post recorded in Supabase — uid="${generatedPost.uid}"`);
+            }
+        } catch (insertErr) {
+            console.warn("[auto-post-service] Supabase insert failed — non-critical:", insertErr);
+        }
 
         if (publish) {
             // Note: the Prismic Migration API creates documents as drafts.
